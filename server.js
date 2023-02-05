@@ -1,17 +1,34 @@
-const express = require("express");
+var andi = require("./blog-service");
 var path = require("path");
-const app = express();
+var express = require("express");
+var app = express();
 var HTTP_PORT = process.env.PORT || 8080;
 
 function onHttpStart() {
   console.log("Express http server listening on: " + HTTP_PORT);
 }
+app.use(express.static("public"));
+
 app.get("/", function (req, res) {
-  res.send("Hello World<br /><a href='/about'>Go to the about page</a>");
+  res.sendFile(path.join(__dirname, "/views/about.html"));
 });
 
 app.get("/about", function (req, res) {
-  res.sendFile(path.join(_dirname, "/views/about.html"));
+  res.sendFile(path.join(__dirname, "/views/about.html"));
 });
 
-app.listen(8080);
+app.get("/categories", (req, res) => {
+  andi
+    .getallcategories()
+    .then(function (categories) {
+      res.json(categories);
+    })
+    .catch((glti) => {
+      res.json("no results returned");
+    });
+});
+// res.redirect();
+// setup http server to listen on HTTP_PORT
+
+// app.listen(HTTP_PORT, onHttpStart);
+app.listen(HTTP_PORT, onHttpStart);
