@@ -1,34 +1,67 @@
-var andi = require("./blog-service");
-var path = require("path");
-var express = require("express");
-var app = express();
-var HTTP_PORT = process.env.PORT || 8080;
+require("./blog-service.js");
+const express = require("express");
+// const { rmSync, link } = require("fs")
+const {
+  initialize,
+  getCategories,
+  getAllPosts,
+  getPublishedPosts,
+} = require("./blog-service.js");
+const app = express();
 
-function onHttpStart() {
-  console.log("Express http server listening on: " + HTTP_PORT);
-}
+const PORT = process.env.PORT || 8080;
 app.use(express.static("public"));
 
-app.get("/", function (req, res) {
-  res.sendFile(path.join(__dirname, "/views/about.html"));
+//
+app.get("/", (req, res) => {
+  res.redirect("/about");
 });
 
-app.get("/about", function (req, res) {
-  res.sendFile(path.join(__dirname, "/views/about.html"));
+app.get("/about", (req, res) => {
+  res.sendFile(__dirname + "/views/about.html");
+});
+
+app.get("/blog", (req, res) => {
+  getPublishedPosts()
+    .then((data) => {
+      res.json(data);
+    })
+    .catch((err) => {
+      res.json(err);
+    });
+});
+
+app.get("/posts", (req, res) => {
+  getAllPosts()
+    .then((data) => {
+      res.json(data);
+    })
+    .catch((err) => {
+      res.json(err);
+    });
 });
 
 app.get("/categories", (req, res) => {
-  andi
-    .getallcategories()
-    .then(function (categories) {
-      res.json(categories);
+  getCategories()
+    .then((data) => {
+      res.json(data);
     })
-    .catch((glti) => {
-      res.json("no results returned");
+    .catch((err) => {
+      res.json(err);
     });
 });
-// res.redirect();
-// setup http server to listen on HTTP_PORT
 
-// app.listen(HTTP_PORT, onHttpStart);
-app.listen(HTTP_PORT, onHttpStart);
+app.use((req, res) => {
+  res.status(404).sendFile(__dirname + "/views/404.html");
+});
+//
+
+initialize()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log("Express http server listening on", PORT);
+    });
+  })
+  .catch((err) => {
+    console.error(err);
+  });

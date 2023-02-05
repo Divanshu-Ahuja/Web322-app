@@ -1,61 +1,44 @@
-var fs = require("fs");
+const fs = require("fs");
 
-var categories = [];
-var posts = [];
+let posts;
+let categories;
 
-module.exports.initialize = function () {
+const initialize = () => {
   return new Promise((resolve, reject) => {
-    fs.readFile("./data/categories.json", "utf8", (err, data) => {
-      if (err) {
-        reject("unable to read categories file");
-      }
+    fs.readFile("./data/posts.json", "utf-8", (err, data) => {
+      if (err) reject("unable to read file");
+      posts = JSON.parse(data);
+    });
+
+    fs.readFile("./data/categories.json", "utf-8", (err, data) => {
+      if (err) reject("unable to read file");
       categories = JSON.parse(data);
     });
 
-    fs.readFile("./data/posts.json", "utf8", (err, data) => {
-      if (err) {
-        reject("unable to read posts file");
-      }
-      posts = JSON.parse(data);
-      resolve();
-    });
+    resolve("success");
   });
 };
 
-module.exports.getallcategories = () => {
+const getAllPosts = () => {
   return new Promise((resolve, reject) => {
-    if (categories.length == 0) {
-      reject("no results returned");
-    } else {
-      resolve(categories);
-    }
+    if (posts.length === 0) reject("no results returned");
+    resolve(posts);
   });
 };
 
-module.exports.getInternationalStudents = () => {
+const getPublishedPosts = () => {
   return new Promise((resolve, reject) => {
-    const internationalStudents = categories.filter(
-      (catogeries) => student.isInternationalStudent === true
-    );
-    if (students.length == 0) {
-      reject("no results returned");
-    } else if (
-      internationalStudents == false &&
-      internationalStudents != true
-    ) {
-      reject("no results returned");
-    } else {
-      resolve(internationalStudents);
-    }
+    const publishedPosts = posts.filter((post) => post.published === true);
+    if (publishedPosts.length === 0) reject("no results returned");
+    resolve(publishedPosts);
   });
 };
 
-module.exports.getPrograms = () => {
+const getCategories = () => {
   return new Promise((resolve, reject) => {
-    if (programs.length == 0) {
-      reject("no results returned");
-    } else {
-      resolve(programs);
-    }
+    if (categories.length === 0) reject("no results returned");
+    resolve(categories);
   });
 };
+
+module.exports = { initialize, getAllPosts, getPublishedPosts, getCategories };
