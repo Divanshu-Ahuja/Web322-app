@@ -1,6 +1,6 @@
 require("./blog-service.js");
 const express = require("express");
-// const { rmSync, link } = require("fs")
+
 const {
   initialize,
   getCategories,
