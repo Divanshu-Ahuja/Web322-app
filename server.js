@@ -23,7 +23,6 @@ const app = express();
 const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
 const streamifier = require("streamifier");
-require("dotenv").config();
 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
