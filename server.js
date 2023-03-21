@@ -70,7 +70,7 @@ cloudinary.config({
 
 const upload = multer();
 
-const HTTP_PORT = process.env.PORT || 5000; /// fjfnbfjkbvnf****
+const HTTP_PORT = process.env.PORT || 8080;
 
 app.use(express.static("public"));
 
