@@ -3,11 +3,11 @@
  * DO NOT DELETE THIS COMMENT IF YOU ARE USING THIS SOLUTION - Harry
  */
 /*********************************************************************************
- *  WEB322 – Assignment 04
+ *  WEB322 – Assignment 05
  *  I declare that this assignment is my own work in accordance with Seneca  Academic Policy.  No part *  of this assignment has been copied manually or electronically from any other source
  *  (including 3rd party web sites) or distributed to other students.
  *
- *  Name: Divanshu Ahuja Student ID:150570216 Date: 20-03-2023
+ *  Name: Divanshu Ahuja Student ID:150570216 Date: 30-03-2023
  *
  *  Cyclic Web App URL: https://tame-red-pelican-coat.cyclic.app/
  *
@@ -22,6 +22,7 @@ const exphbs = require("express-handlebars");
 const stripJs = require("strip-js");
 
 const app = express();
+app.use(express.urlencoded({ extended: true }));
 
 app.engine(
   ".hbs",
@@ -51,6 +52,12 @@ app.engine(
       safeHTML: function (context) {
         return stripJs(context);
       },
+      formatDate: function (dateObj) {
+        let year = dateObj.getFullYear();
+        let month = (dateObj.getMonth() + 1).toString();
+        let day = dateObj.getDate().toString();
+        return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+      },
     },
   })
 );
@@ -59,12 +66,11 @@ app.set("view engine", ".hbs");
 const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
 const streamifier = require("streamifier");
-require("dotenv").config();
 
 cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.API_KEY,
-  api_secret: process.env.API_SECRET,
+  cloud_name: "web3222-app",
+  api_key: "28d0e99f-1c4a-46fc-88f0-ca5e44d47b2e",
+  api_secret: "28d0e99f-1c4a-46fc-88f0-ca5e44d47b2e",
   secure: true,
 });
 
@@ -141,21 +147,37 @@ app.get("/posts", (req, res) => {
   if (req.query.category)
     blogData
       .getPostsByCategory(req.query.category)
-      .then((data) => res.render("posts", { posts: data }))
+      .then((data) => {
+        if (data.length > 0) {
+          res.render("posts", { posts: data });
+        } else {
+          res.render("posts", { message: "no results" });
+        }
+      })
       .catch((err) => res.render("posts", { message: "no results" }));
   else if (req.query.minDate)
     blogData
       .getPostsByMinDate(req.query.minDate)
-      .then((data) => res.render("posts", { posts: data }))
+      .then((data) => {
+        if (data.length > 0) {
+          res.render("posts", { posts: data });
+        } else {
+          res.render("posts", { message: "no results" });
+        }
+      })
       .catch((err) => res.render("posts", { message: "no results" }));
   else
     blogData
       .getAllPosts()
       .then((data) => {
-        res.render("posts", { posts: data });
+        if (data.length > 0) {
+          res.render("posts", { posts: data });
+        } else {
+          res.render("posts", { message: "no results" });
+        }
       })
       .catch((err) => {
-        res.render("posts", { message: "no results" });
+        res.render("posts", { message: err });
       });
 });
 
@@ -207,7 +229,14 @@ app.get("/blog/:id", async (req, res) => {
 });
 
 app.get("/posts/add", (req, res) => {
-  res.render("addPost");
+  blogData
+    .getCategories()
+    .then((data) => {
+      res.render("addPost", { categories: data });
+    })
+    .catch((err) => {
+      res.render("addPost", { categories: [] });
+    });
 });
 
 app.post("/posts/add", upload.single("featureImage"), (req, res) => {
@@ -228,7 +257,7 @@ app.post("/posts/add", upload.single("featureImage"), (req, res) => {
 
     async function upload(req) {
       let result = await streamUpload(req);
-      console.log(result);
+      // console.log(result)
       return result;
     }
 
@@ -252,11 +281,41 @@ app.get("/categories", (req, res) => {
   blogData
     .getCategories()
     .then((data) => {
-      res.render("categories", { categories: data });
+      if (data.length > 0) res.render("categories", { categories: data });
+      else res.render("categories", { message: "no results returned" });
     })
     .catch((err) => {
-      res.render("categories", { message: "no results" });
+      res.render("categories", { message: err });
     });
+});
+
+app.get("/categories/add", (req, res) => {
+  res.render("addCategory");
+});
+
+app.post("/categories/add", (req, res) => {
+  blogData
+    .addCategory(req.body)
+    .then(() => res.redirect("/categories"))
+    .catch(() => {});
+});
+
+app.get("/categories/delete/:id", (req, res) => {
+  blogData
+    .deleteCategoryById(req.params.id)
+    .then(() => res.redirect("/categories"))
+    .catch((err) =>
+      res.status(500).send("Unable to Remove Category / Category not found)")
+    );
+});
+
+app.get("/posts/delete/:id", (req, res) => {
+  blogData
+    .deletePostById(req.params.id)
+    .then(() => res.redirect("/posts"))
+    .catch((err) =>
+      res.status(500).send("Unable to Remove Post / Post not found")
+    );
 });
 
 app.use((req, res) => {
