@@ -7,38 +7,43 @@
   </head>
   <body>
     <h1>Add Post</h1>
+    <hr>
     <form action="/posts/add" enctype="multipart/form-data" method="post">
       <h2>Feature Image</h2>
       <hr />
-      <input name="featureImage" id="featureImage" type="file" />
+      <input style="margin: auto;" name="featureImage" id="featureImage" type="file" />
 
       <h2>Post Content</h2>
       <hr />
       <label for="title">Title:</label>
       <br />
-      <input type="text" name="title" id="title" />
-      <br />
+      <input type="text" name="title" id="title" style="width: 100%" />
+      <br /> <br>
       <label for="body">Body:</label>
       <br />
-      <textarea name="body" id="body"></textarea>
-      <br />
+      <textarea name="body" id="body" style="width: 100%; min-height: 10rem;"></textarea>
+      <br /> <br> 
 
       <label for="category">Category:</label>
       <br />
-      <select name="category" id="category">
-        <option value="1">Technology</option>
-        <option value="2">Gaming</option>
-        <option value="3">Fashion</option>
-        <option value="4">Education</option>
-        <option value="5">Wellness</option>
+        {{#if categories}}
+          <select class="form-control" name="category" id="category">
+            <option value="">Select Category</option>
+            {{#each categories}}
+              <option value="{{id}}">{{category}}</option>
+            {{/each}}
+          </select>
+        {{else}}
+          <div>No Categories</div>
+        {{/if}}
       </select>
       <br />
 
-      <p>Visibility:</p>
+      <p style="font-weight: bold;">Visibility:</p>
       <input type="checkbox" name="published" id="published" value="true" />
       <label for="published">Published</label>
       <hr />
-      <button>Add Post</button>
+      <button class="btn btn-success">Add Post</button>
     </form>
   </body>
 </html>

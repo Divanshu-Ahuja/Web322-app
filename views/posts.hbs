@@ -1,33 +1,40 @@
 <div class="row">
   <div class="col-md-12">
-    <h2>Posts</h2>
+    <h2>Posts
+      <a href="/posts/add" class="btn btn-success pull-right">Add Post</a></h2>
     <hr />
-    <table class="table table-bordered table-responsive">
-      <thead class="thead-dark">
-        <tr>
-          <th>Post ID</th>
-          <th>Title</th>
-          <th>Post Date</th>
-          <th>Category</th>
-          <th>Published</th>
-        </tr>
-      </thead>
-      <tbody>
-        {{#each posts}}
+    {{#if posts}}
+      <table class="table table-bordered table-responsive">
+        <thead class="thead-dark">
           <tr>
-            <td>{{id}}</td>
-            <td>{{title}}</td>
-            <td>{{postDate}}</td>
-            <td><a href="/posts?category={{category}}">{{category}}</a></td>
-            <td>{{published}}</td>
+            <th>Post ID</th>
+            <th>Title</th>
+            <th>Post Date</th>
+            <th>Category</th>
+            <th>Published</th>
           </tr>
-        {{else}}
-          <div class="col-md-12 text-center">
-            <strong>{{message}}</strong>
-          </div>
-        {{/each}}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {{#each posts}}
+            <tr>
+              <td>{{id}}</td>
+              <td>{{title}}</td>
+              <td>{{postDate}}</td>
+              <td><a href="/posts?category={{category}}">{{category}}</a></td>
+              <td>{{published}}</td>
+              <td><a
+                  class="btn btn-danger"
+                  href="/posts/delete/{{id}}"
+                >remove</a></td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    {{else}}
+      <div class="col-md-12 text-center">
+        <strong>{{message}}</strong>
+      </div>
+    {{/if}}
 
   </div>
 </div>
