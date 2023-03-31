@@ -66,11 +66,12 @@ app.set("view engine", ".hbs");
 const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
 const streamifier = require("streamifier");
+require("dotenv").config();
 
 cloudinary.config({
-  cloud_name: "web3222-app",
-  api_key: "28d0e99f-1c4a-46fc-88f0-ca5e44d47b2e",
-  api_secret: "28d0e99f-1c4a-46fc-88f0-ca5e44d47b2e",
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
   secure: true,
 });
 
