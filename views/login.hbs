@@ -1,0 +1,28 @@
+<h1>Log In</h1>
+<hr />
+{{#if errorMessage}}
+  <div class="alert alert-danger">
+    <strong>Error:</strong>
+    {{errorMessage}}</div>
+{{/if}}
+<form action="/login" method="post" style="text-align: right;">
+  <input
+    style="min-width: 100%; padding: 1rem; border-radius: 0.5rem; border: 1px black solid;"
+    type="text"
+    name="userName"
+    placeholder="User Name"
+    required
+  />
+  <br />
+  <br />
+  <input
+    type="password"
+    style="min-width: 100%; padding: 1rem; border-radius: 0.5rem; border: 1px black solid;"
+    name="password"
+    placeholder="Password"
+    required
+  />
+  <br />
+  <br />
+  <button class="btn btn-success" style="padding: 1rem 2rem; ">Login</button>
+</form>
