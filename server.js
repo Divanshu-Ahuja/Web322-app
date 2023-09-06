@@ -1,24 +1,4 @@
-/*
- * SOLUTION for AS2
- * DO NOT DELETE THIS COMMENT IF YOU ARE USING THIS SOLUTION - Harry
- */
-/*********************************************************************************
- *  WEB322 – Assignment 06
- *  I declare that this assignment is my own work in accordance with Seneca  Academic Policy.  No part *  of this assignment has been copied manually or electronically from any other source
- *  (including 3rd party web sites) or distributed to other students.
- *
- *  Name: Divanshu Ahuja Student ID:150570216 Date: 14-04-2023
- *
- *  Cyclic Web App URL: https://tame-red-pelican-coat.cyclic.app/
- *
- *  GitHub Repository URL: https://github.com/Divanshu-Ahuja/Web322-app
- *
- ********************************************************************************/
 
-/*
- * SOLUTION for AS2
- * DO NOT DELETE THIS COMMENT IF YOU ARE USING THIS SOLUTION - Harry
- */
 
 const express = require("express");
 const blogData = require("./blog-service");
